@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRIDHAR - Futuristic Web Innovator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #6C63FF;
+            --secondary-color: #FF6B6B;
+            --background-color: #0F172A;
+            --text-color: #F8FAFC;
+            --accent-color: #4ADE80;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 20px 0;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        header.scrolled {
+            background-color: rgba(15, 23, 42, 0.8);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 5s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            padding: 12px 24px;
+            border: none;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .about {
+            padding: 100px 0;
+            background-color: #1E293B;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text {
+            padding-right: 50px;
+        }
+
+        .about-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+        }
+
+        .about-image img {
+            max-width: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .skills {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-item {
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .skill-item:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .portfolio {
+            padding: 100px 0;
+        }
+
+        .portfolio h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .project-item {
+            background-color: #1E293B;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .project-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .project-item:hover .project-image img {
+            transform: scale(1.1);
+        }
+
+        .project-content {
+            padding: 20px;
+        }
+
+        .project-content h3 {
+            margin-bottom: 10px;
+            color: var(--accent-color);
+        }
+
+        .project-content p {
+            font-size: 0.9rem;
+            color: #CBD5E1;
+            margin-bottom: 15px;
+        }
+
+        .contact {
+            padding: 100px 0;
+            background-color: #1E293B;
+        }
+
+        .contact h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--accent-color);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #2D3748;
+            color: var(--text-color);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--primary-color);
+        }
+
+        .form-group textarea {
+            height: 150px;
+        }
+
+        footer {
+            background-color: #0F172A;
+            color: var(--text-color);
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .social-icons {
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .about-text {
+                padding-right: 0;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+        }
+        .experimental-typography {
+            padding: 100px 0;
+            text-align: center;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glitch {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            position: relative;
+            color: #fff;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #ff00c1;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1;
+            animation: glitch-anim2 1s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% {
+                clip: rect(31px, 9999px, 94px, 0);
+            }
+            100% {
+                clip: rect(70px, 9999px, 71px, 0);
+            }
+        }
+
+        @keyframes glitch-anim2 {
+            0% {
+                clip: rect(65px, 9999px, 99px, 0);
+            }
+            100% {
+                clip: rect(79px, 9999px, 68px, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">SRIDHAR</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <canvas id="hero-canvas"></canvas>
+        <div class="container hero-content">
+            <h1>Innovating the Future Web</h1>
+            <p>Crafting immersive digital experiences</p>
+            <a href="#portfolio" class="btn">Explore My Work</a>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>About Me</h2>
+                    <p>I'm a visionary web developer pushing the boundaries of what's possible in the digital realm. With a passion for emerging technologies and a knack for creating seamless user experiences, I bring innovative ideas to life.</p>
+                    <div class="skills">
+                        <div class="skill-item">Advanced JavaScript</div>
+                        <div class="skill-item">React & Next.js</div>
+                        <div class="skill-item">Three.js</div>
+                        <div class="skill-item">WebGL</div>
+                        <div class="skill-item">Node.js</div>
+                        <div class="skill-item">GraphQL</div>
+                        <div class="skill-item">Web3</div>
+                        <div class="skill-item">AI Integration</div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="image.png" alt="Sridhar">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <h2>Innovative Projects</h2>
+            <div class="project-grid" id="project-grid">
+                <!-- Projects will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+    <section class="experimental-typography">
+        <h2 class="glitch" data-text="Future">Future</h2>
+        <p>Shaping tomorrow's web experiences</p>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Let's Connect</h2>
+            <form class="contact-form" id="contact-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 SRIDHAR. Innovating the future of web.</p>
+            <div class="social-icons">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Project data (same as before)
+        const projects = [
+        {
+            title: "Morse Code Generator And Analyze",
+            description: "The project aims to develop a comprehensive Morse Code Generator and Analyzer tool that enables users to convert text to Morse code and decode Morse code back into readable text...",
+            imageUrl: "project1.jpg",
+            projectUrl: "https://sridhar242004.github.io/MORSE-CODE-AND-EMOTIONAL-ANALYZER/"
+        },
+        {
+            title: "Music Visualization",
+            description: "The Interactive Music Studio allows users to perform various tasks related to music creation, recording, and manipulation...",
+            imageUrl: "project2.jpg",
+            projectUrl: "https://sridhar242004.github.io/MUSIC_STUDIO/"
+        },
+        {
+            title: "Story Reader",
+            description: "Story Reader is a web application designed to enhance the reading experience by providing users with a platform to access and enjoy a curated collection of stories...",
+            imageUrl: "project3.jpg",
+            projectUrl: "https://sridhar242004.github.io/story-Reader/"
+        },
+        {
+            title: "QuantumED",
+            description: "QuantumED is the educational platform....",
+            imageUrl: "project4.jpg",
+            projectUrl: "https://sridhar242004.github.io/QuantumED/codechefreplica/index.html"
+        },
+        {
+            title: "Interactive Story Telling Website",
+            description: "Interactive Story Telling Website is the story reading platform...",
+            imageUrl: "project5.jpg",
+            projectUrl: "https://sridhar242004.github.io/STORY_TELLING-WEBSITE/"
+        },
+        {
+            title: "Quantum Computing Website",
+            description: "Quantum Computing Website is a learning platform...",
+            imageUrl: "project6.jpg",
+            projectUrl: "https://sridhar242004.github.io/Quantum-Computing/"
+        },
+        {
+            title: "CLIMATE-CHANGE-SIMULATOR",
+            description: "Future climate predictions in various parts of the world and green house effect",
+            imageUrl: "project7.jpg",
+            projectUrl: "https://sridhar242004.github.io/CLIMATE-CHANGE-SIMULATOR/"
+        },
+        {
+            title: "Foot-print calculator",
+            description: "A tool that helps you calculate your ecological footprint by providing a simple and interactive way to measure your resource consumption and environmental impact, offering suggestions to reduce your footprint and live more sustainably.",
+            imageUrl: "project8.jpg",
+            projectUrl: "https://sridhar242004.github.io/Foot-Print-Calculator/"
+        },
+        {
+            title: "Dice-Game",
+            description: " A dice game is a type of game that uses one or more dice as the primary component, often as a random device, where players roll the dice to score points, take actions, or make decisions, with various combinations and outcomes determining the game’s progression and outcome.",
+            imageUrl: "project9.jpg",
+            projectUrl: "https://sridhar242004.github.io/dice-game/"
+        },
+        {
+            title: "Shooter-Game",
+            description: "Fast-paced Shooter Game",
+            imageUrl: "project10.jpg",
+            projectUrl: "https://sridhar242004.github.io/shooter-game/"
+        },
+        {
+            title: "flappy-bird",
+            description: "Endless flying, pipe-avoiding game",
+            imageUrl: "project11.jpg",
+            projectUrl: "https://sridhar242004.github.io/flappy-bird/"
+        },
+        {
+            title: "To-Do-list",
+            description: "Organize Your To-Do List",
+            imageUrl: "project12.jpg",
+            projectUrl: "https://sridhar242004.github.io/To-Do-list/"
+        },
+        {
+            title: "3d-shape-viewer",
+            description: "Free online 3D design viewer",
+            imageUrl: "project13.jpg",
+            projectUrl: "https://sridhar242004.github.io/3d-shape-viewer/"
+        },
+         {
+            title: "snake-game",
+            description: "Avoid Obstacles, Survive Longer",
+            imageUrl: "project14.jpg",
+            projectUrl: "https://sridhar242004.github.io/snake-game/"
+        },
+        {
+            title: "VIRTUAL-WAREDOOR",
+            description: "Virtual Waredoor is a digital platform.",
+            imageUrl: "project15.jpg",
+            projectUrl: "https://sridhar242004.github.io/VIRTUAL-WAREDOOR/"
+        },
+        {
+            title: "DNA-FITNESS-TRACKER-AND-SUGGESTIONS",
+            description: "Fitness suggestions based on DNA(upload your ,or sample DNA json.file)",
+            imageUrl: "project16.jpg",
+            projectUrl: "https://sridhar242004.github.io/DNA-FITNESS-TRACKER-AND-SUGGESTIONS/"
+        },
+        {
+            title: "virtual-debate",
+            description: "Worlds first virtual debate platform",
+            imageUrl: "project17.jpg",
+            projectUrl: "https://sridhar242004.github.io/virtual-debate/"
+        },
+        {
+            title: "Personalized-Digital-Detox-Assistant",
+            description: "very simple and basic Personalized-Digital-Detox-Assistant",
+            imageUrl: "project18.jpg",
+            projectUrl: "https://sridhar242004.github.io/Personalized-Digital-Detox-Assistant/"
+        },
+        {
+            title: "Interactive-Genomic-Data-Explorer",
+            description: "New innovative and interactive functions with the DNA ",
+            imageUrl: "project19.jpg",
+            projectUrl: "https://sridhar242004.github.io/Interactive-Genomic-Data-Explorer/"
+        },
+        {
+            title: "Advanced-collage-maker",
+            description: "new way of collage making ",
+            imageUrl: "project20.jpg",
+            projectUrl: "https://sridhar242004.github.io/Advanced-collage-maker/"
+        },
+        {
+            title: "Resume-Builder",
+            description: "new way of resume building ",
+            imageUrl: "project21.jpg",
+            projectUrl: "https://sridhar242004.github.io/resume-builder/"
+        }
+        ];
+
+        // Function to load projects
+        const loadProjects = () => {
+            const projectGrid = document.getElementById('project-grid');
+            projects.forEach((project) => {
+                const projectElement = document.createElement('div');
+                projectElement.className = 'project-item';
+                projectElement.innerHTML = `
+                    <div class="project-image">
+                        <img src="${project.imageUrl}" alt="${project.title}">
+                    </div>
+                    <div class="project-content">
+                        <h3>${project.title}</h3>
+                        <p>${project.description}</p>
+                        <a href="${project.projectUrl}" class="btn" target="_blank">Explore</a>
+                    </div>
+                `;
+                projectGrid.appendChild(projectElement);
+            });
+        };
+
+        // Load projects when DOM is ready
+        document.addEventListener('DOMContentLoaded', loadProjects);
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Three.js background for hero section
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('hero-canvas'), alpha: true });
+
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+        const material = new THREE.MeshBasicMaterial({ color: 0x6C63FF, wireframe: true });
+        const torusKnot = new THREE.Mesh(geometry, material);
+        scene.add(torusKnot);
+
+        camera.position.z = 30;
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+            torusKnot.rotation.x += 0.01;
+            torusKnot.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        };
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // GSAP animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.from('.hero-content', {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            ease: 'power3.out'
+        });
+
+        gsap.from('.about-content', {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            scrollTrigger: {
+                trigger: '.about',
+                start: 'top 80%'
+            }
+        });
+
+        gsap.from('.project-item', {
+            opacity: 0,
+            y: 50,
+            duration: 0.8,
+            stagger: 0.2,
+            scrollTrigger: {
+                trigger: '.portfolio',
+                start: 'top 80%'
+            }
+        });
+
+        gsap.from('.contact-form', {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            scrollTrigger: {
+                trigger: '.contact',
+                start: 'top 80%'
+            }
+        });
+// Particle effect for experimental typography section
+const particlesJSON = {
+    "particles": {
+        "number": {
+            "value": 80,
+            "density": {
+                "enable": true,
+                "value_area": 800
+            }
+        },
+        "color": {
+            "value": "#00fff9"
+        },
+        "shape": {
+            "type": "circle",
+            "stroke": {
+                "width": 0,
+                "color": "#000000"
+            },
+            "polygon": {
+                "nb_sides": 5
+            }
+        },
+        "opacity": {
+            "value": 0.5,
+            "random": false,
+            "anim": {
+                "enable": false,
+                "speed": 1,
+                "opacity_min": 0.1,
+                "sync": false
+            }
+        },
+        "size": {
+            "value": 3,
+            "random": true,
+            "anim": {
+                "enable": false,
+                "speed": 40,
+                "size_min": 0.1,
+                "sync": false
+            }
+        },
+        "line_linked": {
+            "enable": true,
+            "distance": 150,
+            "color": "#00fff9",
+            "opacity": 0.4,
+            "width": 1
+        },
+        "move": {
+            "enable": true,
+            "speed": 6,
+            "direction": "none",
+            "random": false,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false,
+            "attract": {
+                "enable": false,
+                "rotateX": 600,
+                "rotateY": 1200
+            }
+        }
+    },
+    "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+            "onhover": {
+                "enable": true,
+                "mode": "repulse"
+            },
+            "onclick": {
+                "enable": true,
+                "mode": "push"
+            },
+            "resize": true
+        },
+        "modes": {
+            "grab": {
+                "distance": 400,
+                "line_linked": {
+                    "opacity": 1
+                }
+            },
+            "bubble": {
+                "distance": 400,
+                "size": 40,
+                "duration": 2,
+                "opacity": 8,
+                "speed": 3
+            },
+            "repulse": {
+                "distance": 200,
+                "duration": 0.4
+            },
+            "push": {
+                "particles_nb": 4
+            },
+            "remove": {
+                "particles_nb": 2
+            }
+        }
+    },
+    "retina_detect": true
+};
+
+particlesJS('particles-js', particlesJSON);
+
+        // Form submission
+        const contactForm = document.getElementById('contact-form');
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Here you would typically send the form data to a server
+            alert('Thank you for your message! I will get back to you soon.');
+            contactForm.reset();
+        });
+    </script>
+</body>
+</html>
